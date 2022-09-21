@@ -3,7 +3,7 @@
 
 This project was assigned in my Econometrics 424 Machine Learning and Prediction class Winter of 2022.   
 
-This was our first of five projects. I am currently working on building better prediction models this finishing up this course. 
+This was our first of five projects. I am currently working on building better prediction models since this finishing up this course. 
 
 ## Please see the following resources for an questions  
 [My Report](https://raw.githack.com/cyrustadjiki/Housing-Project/master/R/Housing-Project.html)  
