@@ -1,0 +1,345 @@
+---
+title: "Housing Project"
+author: "Cyrus Tadjiki"
+date: "January 19th, 2022"
+output: 
+  html_document:
+    theme: united
+    highlight: tango 
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    keep_md: true
+---
+
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  color: Black;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Black;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Black;
+  text-align: center;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Set Up
+```{r}
+library(pacman)
+p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics)
+```
+
+
+# Cleaning Data
+```{r, message=FALSE,warning=FALSE}
+
+# Loading training dataset
+df = read_csv("train.csv")
+# Kaggle Method
+# df = "../input/house-prices-advanced-regression-techniques//train.csv" %>% read_csv()
+
+
+# Cleaning Data
+df %>% dim() # Check dimension
+unclean = df # Making a copy of old dataframe
+df = clean_names(df) 
+
+df = subset(df, select = -c(bsmt_qual,bsmt_cond,bsmt_exposure,
+                            bsmt_fin_type1,bsmt_fin_type2,alley,
+                            garage_yr_blt, lot_frontage)) # removing columns
+
+df$pool = ifelse(df$pool_area > 1, 1, 0) # Binary Varible for having a pool
+
+df$fireplace_good_qu =  ifelse(df$fireplace_qu == "Ex"| # Making all Average, Good, and
+                               df$fireplace_qu == "Gd"| # Excellent Quality Fireplaces = 1
+                               df$fireplace_qu == "TA", 1, 0) 
+
+df$fireplace_good_qu[is.na(df$fireplace_good_qu)] = 0 # Making NAs zero
+# df$fireplace_good_qu
+
+
+df$fence_good =  ifelse(df$fence == "GdPrv"| df$fence == "GdWo", 1, 0)
+df$fence_good[is.na(df$fence_good)] = 0 # Making NAs zero
+# df$fence_good
+
+df$mas_vnr_area[is.na(df$mas_vnr_area)] = 0 # Making NAs zero
+# df$mas_vnr_area
+
+
+df$heating_qc_rank = ifelse(df$heating_qc == "Ex", 5,
+                     ifelse(df$heating_qc == "Gd", 4,
+                     ifelse(df$heating_qc == "TA", 3,
+                     ifelse(df$heating_qc == "Fa", 2,
+                     ifelse(df$heating_qc == "Po", 1, 0)))))
+
+# df$heating_qc_rank
+
+
+df$central_air_ac = ifelse(df$central_air == "Y", 1, 0)
+# df$central_air_ac
+
+
+
+df$paved_drive_qu = ifelse(df$paved_drive == "Y", 2,
+                    ifelse(df$paved_drive == "P", 1,0))
+# df$paved_drive_qu
+
+# names(df)[36] = "first_flr_sf"
+# names(df)[37] = "second_flr_sf"
+# names(df)[61] = "three_ssn_porch"
+
+df = df %>% 
+  rename(first_flr_sf = "x1st_flr_sf",
+         second_flr_sf = "x2nd_flr_sf",
+         three_ssn_porch = "x3ssn_porch")
+```
+
+# Viewing Data
+```{r}
+names(df)
+skim(df) # viewing the columns
+```
+
+```{r, echo=FALSE}
+# TO DO                                      
+# Rename Columns 44,45,68 (these numbers are different)                          
+                                      
+
+# train_df %>% na.omit() %>% dim()
+# names(df)
+```
+
+
+# Subsetting to Numeric Columns
+```{r}
+num_cols = unlist(lapply(df, is.numeric)) # Identify numeric columns  
+data_num = df[ , num_cols] # Subset numeric columns of data
+head(data_num)
+```
+
+# Methods
+Here I ran different regressions with every numeric variable to attempt and identify what parameters are most significant for predicting housing prices.
+```{r}
+reg1 = lm(sale_price~.-id, data = data_num)
+# tidy(reg1)
+summary(reg1)
+
+
+reg2 = lm(sale_price~central_air_ac, data = data_num)
+# tidy(reg2)
+summary(reg2)
+
+reg3 = lm(sale_price~
+          . # Everything
+          -id-total_bsmt_sf-gr_liv_area # Dropping
+          + poly(bsmt_unf_sf, 3) # Sig
+          + poly(year_built, 3) # Sig
+          + poly(bsmt_fin_sf1, 3) # Sig
+          + poly(lot_area, 3), # Sig
+          data = data_num)
+
+# tidy(reg3)
+summary(reg3)
+
+
+reg4 = lm(sale_price~
+            . # Everything
+          -id-total_bsmt_sf-gr_liv_area # Dropping NA Varibles
+          # Getting rid of unsig ones
+          -year_remod_add-low_qual_fin_sf-bsmt_full_bath
+          -bsmt_half_bath-full_bath-half_bath-garage_cars
+          -open_porch_sf-enclosed_porch-three_ssn_porch
+          -misc_val-mo_sold-yr_sold-pool-heating_qc_rank
+          -central_air_ac-paved_drive_qu
+          + poly(bsmt_unf_sf, 3) # Sig
+          + poly(year_built, 3) # Sig
+          + poly(bsmt_fin_sf1, 3) # Sig
+          + poly(lot_area, 3), # Sig
+          data = data_num)
+
+# tidy(reg4)
+summary(reg4)
+```
+
+# Loading and Cleaning Test Data Set
+```{r}
+## Loading Test Data
+test_df = read.csv("test.csv")
+
+# Cleaning Data
+test_unclean = test_df # Making a copy of old dataframe
+test_df = clean_names(test_df) 
+
+
+test_df = test_df %>% 
+  rename(first_flr_sf = "x1st_flr_sf",
+         second_flr_sf = "x2nd_flr_sf",
+         three_ssn_porch = "x3ssn_porch")
+
+### Adding Varibles to test_df
+test_df = subset(test_df, select = -c(bsmt_qual,bsmt_cond,bsmt_exposure,
+                                      bsmt_fin_type1,bsmt_fin_type2,alley,
+                                      garage_yr_blt, lot_frontage)) # removing columns
+
+test_df$pool = ifelse(test_df$pool_area > 1, 1, 0) # Binary Varible for having a pool
+
+
+# Making all Average, Good, and Excellent Quality Fireplaces = 1
+test_df$fireplace_good_qu =  ifelse(test_df$fireplace_qu == "Ex"|
+                                    test_df$fireplace_qu == "Gd"| 
+                                   test_df$fireplace_qu == "TA", 1, 0) 
+
+test_df$fireplace_good_qu[is.na(test_df$fireplace_good_qu)] = 0 # Making NAs zero
+# test_df$fireplace_good_qu
+
+
+test_df$fence_good =  ifelse(test_df$fence == "GdPrv"| test_df$fence == "GdWo", 1, 0)
+test_df$fence_good[is.na(test_df$fence_good)] = 0 # Making NAs zero
+# test_df$fence_good
+
+test_df$mas_vnr_area[is.na(test_df$mas_vnr_area)] = 0 # Making NAs zero
+# test_df$mas_vnr_area
+
+
+test_df$heating_qc_rank = ifelse(test_df$heating_qc == "Ex", 5,
+                          ifelse(test_df$heating_qc == "Gd", 4,
+                          ifelse(test_df$heating_qc == "TA", 3,
+                          ifelse(test_df$heating_qc == "Fa", 2,
+                          ifelse(test_df$heating_qc == "Po", 1, 0)))))
+
+# test_df$heating_qc_rank
+
+
+test_df$central_air_ac = ifelse(test_df$central_air == "Y", 1, 0)
+# test_df$central_air_ac
+
+
+test_df$paved_drive_qu = ifelse(test_df$paved_drive == "Y", 2,
+                         ifelse(test_df$paved_drive == "P", 1,0))
+```
+
+# Making Predictions with `predict()`
+```{r, warning=FALSE}
+pred = predict(object = reg1, newdata = test_df)
+pred2 = predict(object = reg2, newdata = test_df)
+pred3 = predict(object = reg3, newdata = test_df)
+pred4 = predict(object = reg4, newdata = test_df)
+```
+
+## Removing NAs and prepping Kaggle submissions
+```{r}
+pred3[is.na(pred3)] = mean(pred3, na.rm = TRUE) # Making NAs mean(pred)
+
+
+pred4[661] = mean(pred4, na.rm = TRUE)
+pred4[1117] = mean(pred4, na.rm = TRUE)
+sum(is.na(pred4))
+# pred4[661]
+# pred4[1117]
+
+# Sanity Checks
+# pred %>% length()
+# pred2 %>% length()
+# pred3 %>% length()
+# pred4 %>% length()
+# test_df %>% nrow()
+
+submit_df = data.frame(
+  Id = test_df$id,
+  SalePrice = pred
+)
+
+
+submit_df2 = data.frame(
+  Id = test_df$id,
+  SalePrice = pred2
+)
+
+submit_df3 = data.frame(
+  Id = test_df$id,
+  SalePrice = pred3
+)
+
+submit_df4 = data.frame(
+  Id = test_df$id,
+  SalePrice = pred4
+)
+
+# View the first few lines of the dataset
+head(submit_df3)  
+
+submit_df$SalePrice[is.na(submit_df$SalePrice)] = mean(pred) # Making NAs mean(pred)
+# submit_df$SalePrice
+
+# submit_df4$SalePrice[is.na(submit_df4$SalePrice)] = mean(pred4)
+
+# Sanity Checks
+# sum(is.na(test_df$mas_vnr_area))
+# sum(is.na(submit_df2$SalePrice))
+# sum(is.na(submit_df3$SalePrice))
+# sum(is.na(submit_df4$SalePrice))
+
+# mean(pred2)
+```
+
+# Saving Submissions
+```{r}
+write_csv(submit_df, file =  "submissions/cyrus-submit-01.csv")
+write_csv(submit_df2, file = "submissions/cyrus-submit-01-sub2.csv")
+write_csv(submit_df3, file = "submissions/cyrus-submit-01-sub3.csv")
+write_csv(submit_df4, file = "submissions/cyrus-submit-01-sub4.csv")
+
+## New Log Regs
+
+log_reg1 = lm(sale_price~.-id, data = data_num)
+
+# Submission Numbers
+# 1108244040
+# 5908414949
+# 867241474
+# 874791986
+```
+
+# Finding Training Performance (MSE)
+```{r}
+
+# data(cars)
+# reg <- lm(log(dist) ~ log(speed), data = cars)
+# MSE(y_pred = exp(reg$fitted.values), y_true = cars$dist)
+# y_pred = exp(reg$fitted.values)
+# y_true = cars$dist
+# MSE(y_pred, y_true)
+
+
+y_pred1 = reg1$fitted.values
+y_true1 = df$sale_price
+mse1 = MSE(y_pred1, y_true1)
+
+
+y_pred2 = reg2$fitted.values
+y_true2 = df$sale_price
+mse2 = MSE(y_pred2, y_true2)
+
+y_pred3 = reg3$fitted.values
+y_true3 = df$sale_price
+mse3 = MSE(y_pred3, y_true3)
+
+y_pred4 = reg4$fitted.values
+y_true4 = df$sale_price
+mse4 = MSE(y_pred4, y_true4)
+```
+
