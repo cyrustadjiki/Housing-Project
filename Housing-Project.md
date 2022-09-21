@@ -697,10 +697,17 @@ submit_df$SalePrice[is.na(submit_df$SalePrice)] = mean(pred) # Making NAs mean(p
 # Saving Submissions
 
 ```r
+<<<<<<< HEAD
 write_csv(submit_df, file =  "submissions/cyrus-submit-01.csv")
 write_csv(submit_df2, file = "submissions/cyrus-submit-01-sub2.csv")
 write_csv(submit_df3, file = "submissions/cyrus-submit-01-sub3.csv")
 write_csv(submit_df4, file = "submissions/cyrus-submit-01-sub4.csv")
+=======
+write_csv(x = submit_df, file = "cyrus-submit-01.csv")
+write_csv(x = submit_df2, file = "cyrus-submit-01-sub2.csv")
+write_csv(x = submit_df3, file = "cyrus-submit-01-sub3.csv")
+write_csv(x = submit_df4, file = "cyrus-submit-01-sub4.csv")
+>>>>>>> 56c4ab53a1af0015c2e413644caa742de8285991
 
 ## New Log Regs
 
