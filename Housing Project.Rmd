@@ -48,7 +48,7 @@ p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics)
 ```{r, message=FALSE,warning=FALSE}
 
 # Loading training dataset
-df = read_csv("train.csv")
+df = read_csv("data/train.csv")
 # Kaggle Method
 # df = "../input/house-prices-advanced-regression-techniques//train.csv" %>% read_csv()
 
@@ -178,7 +178,7 @@ summary(reg4)
 # Loading and Cleaning Test Data Set
 ```{r}
 ## Loading Test Data
-test_df = read.csv("test.csv")
+test_df = read.csv("data/test.csv")
 
 # Cleaning Data
 test_unclean = test_df # Making a copy of old dataframe
@@ -342,4 +342,6 @@ y_pred4 = reg4$fitted.values
 y_true4 = df$sale_price
 mse4 = MSE(y_pred4, y_true4)
 ```
+
+
 

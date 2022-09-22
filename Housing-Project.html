@@ -368,7 +368,7 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
 <div id="cleaning-data" class="section level1">
 <h1>Cleaning Data</h1>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading training dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">&quot;train.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/train.csv&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Kaggle Method</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df = &quot;../input/house-prices-advanced-regression-techniques//train.csv&quot; %&gt;% read_csv()</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -1717,7 +1717,7 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
 <div id="loading-and-cleaning-test-data-set" class="section level1">
 <h1>Loading and Cleaning Test Data Set</h1>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading Test Data</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;test.csv&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/test.csv&quot;</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning Data</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>test_unclean <span class="ot">=</span> test_df <span class="co"># Making a copy of old dataframe</span></span>
@@ -1841,17 +1841,10 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
 </div>
 <div id="saving-submissions" class="section level1">
 <h1>Saving Submissions</h1>
-<<<<<<< HEAD
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(submit_df, <span class="at">file =</span>  <span class="st">&quot;submissions/cyrus-submit-01.csv&quot;</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(submit_df2, <span class="at">file =</span> <span class="st">&quot;submissions/cyrus-submit-01-sub2.csv&quot;</span>)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(submit_df3, <span class="at">file =</span> <span class="st">&quot;submissions/cyrus-submit-01-sub3.csv&quot;</span>)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(submit_df4, <span class="at">file =</span> <span class="st">&quot;submissions/cyrus-submit-01-sub4.csv&quot;</span>)</span>
-=======
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(<span class="at">x =</span> submit_df, <span class="at">file =</span> <span class="st">&quot;cyrus-submit-01.csv&quot;</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(<span class="at">x =</span> submit_df2, <span class="at">file =</span> <span class="st">&quot;cyrus-submit-01-sub2.csv&quot;</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(<span class="at">x =</span> submit_df3, <span class="at">file =</span> <span class="st">&quot;cyrus-submit-01-sub3.csv&quot;</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(<span class="at">x =</span> submit_df4, <span class="at">file =</span> <span class="st">&quot;cyrus-submit-01-sub4.csv&quot;</span>)</span>
->>>>>>> 56c4ab53a1af0015c2e413644caa742de8285991
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="do">## New Log Regs</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>

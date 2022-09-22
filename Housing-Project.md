@@ -47,7 +47,7 @@ p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics)
 
 ```r
 # Loading training dataset
-df = read_csv("train.csv")
+df = read_csv("data/train.csv")
 # Kaggle Method
 # df = "../input/house-prices-advanced-regression-techniques//train.csv" %>% read_csv()
 
@@ -555,7 +555,7 @@ summary(reg4)
 
 ```r
 ## Loading Test Data
-test_df = read.csv("test.csv")
+test_df = read.csv("data/test.csv")
 
 # Cleaning Data
 test_unclean = test_df # Making a copy of old dataframe
@@ -697,17 +697,10 @@ submit_df$SalePrice[is.na(submit_df$SalePrice)] = mean(pred) # Making NAs mean(p
 # Saving Submissions
 
 ```r
-<<<<<<< HEAD
 write_csv(submit_df, file =  "submissions/cyrus-submit-01.csv")
 write_csv(submit_df2, file = "submissions/cyrus-submit-01-sub2.csv")
 write_csv(submit_df3, file = "submissions/cyrus-submit-01-sub3.csv")
 write_csv(submit_df4, file = "submissions/cyrus-submit-01-sub4.csv")
-=======
-write_csv(x = submit_df, file = "cyrus-submit-01.csv")
-write_csv(x = submit_df2, file = "cyrus-submit-01-sub2.csv")
-write_csv(x = submit_df3, file = "cyrus-submit-01-sub3.csv")
-write_csv(x = submit_df4, file = "cyrus-submit-01-sub4.csv")
->>>>>>> 56c4ab53a1af0015c2e413644caa742de8285991
 
 ## New Log Regs
 
@@ -748,4 +741,6 @@ y_pred4 = reg4$fitted.values
 y_true4 = df$sale_price
 mse4 = MSE(y_pred4, y_true4)
 ```
+
+
 
