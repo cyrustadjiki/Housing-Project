@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Set Up
 ```{r}
 library(pacman)
-p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics)
+p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics) 
 ```
 
 

@@ -39,7 +39,7 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
 
 ```r
 library(pacman)
-p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics)
+p_load(tidyverse, magrittr, janitor, skimr, broom, MLmetrics) 
 ```
 
 
